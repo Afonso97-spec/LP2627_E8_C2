@@ -6,5 +6,4 @@ import entity.Registo;
 
 public interface RegistoRepository extends JpaRepository<Registo, Integer>{
 	
-	List<Registo> findAllByOrderByDataDescIdDesc();
 }
