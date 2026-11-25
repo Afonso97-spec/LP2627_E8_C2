@@ -33,8 +33,6 @@ public class Registo {
 	@Column(nullable=false)
 	private String titulo;
 	
-	private String fotografia;
-	
 	@Column(nullable = false)
 	private String descricao;
 	
@@ -114,14 +112,6 @@ public class Registo {
 		this.titulo = titulo;
 	}
 
-	public String getFotografia() {
-		return fotografia;
-	}
-
-	public void setFotografia(String fotografia) {
-		this.fotografia = fotografia;
-	}
-
 	public String getDescricao() {
 		return descricao;
 	}
@@ -188,7 +178,7 @@ public class Registo {
 
 	@Override
 	public String toString() {
-		return "Registo [id=" + id + ", utilizador=" + utilizador + ", titulo=" + titulo + ", fotografia=" + fotografia
+		return "Registo [id=" + id + ", utilizador=" + utilizador + ", titulo=" + titulo 
 				+ ", descricao=" + descricao + ", categoria=" + categoria + ", subcategoria=" + subcategoria
 				+ ", marca=" + marca + ", local=" + local + ", data=" + data + ", hora=" + hora + ", estado=" + estado
 				+ "]";
