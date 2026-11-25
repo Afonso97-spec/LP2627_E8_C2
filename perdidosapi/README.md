@@ -4,7 +4,7 @@ Engenharia Informática | Laboratório de Programação - 2026/2027
 
 ## Descrição
 
-Sistema de achados e perdidos para a universidade.
+Sistema de achados e perdidos para a universidade
 
 ## Objetivo
 
