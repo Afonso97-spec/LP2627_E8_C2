@@ -15,57 +15,54 @@ import jakarta.persistence.Table;
 @Table(name = "marca")
 public class Marca {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 
-    @Column(nullable = false, unique = true)
-    private String nome;
+	@Column(nullable = false, unique = true)
+	private String nome;
 
-    @OneToMany(mappedBy = "marca")
-    private List<Registo> registos = new ArrayList<>();
+	@OneToMany(mappedBy = "marca")
+	private List<Registo> registos = new ArrayList<>();
 
-    protected Marca() {
-    }
+	public Marca() {
+	}
 
-    public Marca(String nome) {
-        this.nome = nome;
-    }
+	public Marca(String nome) {
+		this.nome = nome;
+	}
 
-    public Marca(long id, String nome) {
-        this.id = id;
-        this.nome = nome;
-    }
+	public Marca(long id, String nome) {
+		this(nome);
+		this.id = id;
+	}
 
-    public long getId() {
-        return id;
-    }
+	public long getId() {
+		return id;
+	}
 
-    public String getNome() {
-        return nome;
-    }
+	public void setId(long id) {
+		this.id = id;
+	}
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+	public String getNome() {
+		return nome;
+	}
 
-    public List<Registo> getRegistos() {
-        return registos;
-    }
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-    public void adicionarRegistoMarca(Registo registo) {
-        if (!registos.contains(registo)) {
-            registos.add(registo);
-            registo.setMarca(this);
-        }
-    }
+	public List<Registo> getRegistos() {
+		return registos;
+	}
 
-    public void removerRegisto(Registo registo) {
-        registos.remove(registo);
-    }
+	public void setRegistos(List<Registo> registos) {
+		this.registos = registos;
+	}
 
-    @Override
-    public String toString() {
-        return "[" + id + "] " + nome;
-    }
+	@Override
+	public String toString() {
+		return "Marca [id=" + id + ", nome=" + nome + "]";
+	}
 }
