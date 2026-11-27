@@ -12,10 +12,10 @@
  </parent>
  
  <groupId>com.upt.lp</groupId>
- <artifactId>schoolapi</artifactId>
+ <artifactId>perdidosapi</artifactId>
  <version>0.0.1-SNAPSHOT</version>
- <name>school-api</name>
- <description>School REST API</description>
+ <name>perdidosapi</name>
+ <description>Perdisos REST api</description>
  
  <properties>
  <java.version>21</java.version>
@@ -49,12 +49,6 @@
  <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
  <version>3.0.3</version>
 </dependency>
- 
- <dependency>
- <groupId>org.springframework.boot</groupId>
- <artifactId>spring-boot-starter-webmvc-test</artifactId>
- <scope>test</scope>
- </dependency>
  </dependencies>
  
  <build>
