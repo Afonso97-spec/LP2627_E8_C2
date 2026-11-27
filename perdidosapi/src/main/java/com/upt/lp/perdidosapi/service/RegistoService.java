@@ -14,6 +14,7 @@ import com.upt.lp.perdidosapi.entity.SubCategoria;
 import com.upt.lp.perdidosapi.entity.Utilizador;
 import com.upt.lp.perdidosapi.entityDTOs.RegistoDTO;
 import com.upt.lp.perdidosapi.mapper.RegistoMapper;
+import com.upt.lp.perdidosapi.repository.AdministradorRepository;
 import com.upt.lp.perdidosapi.repository.CategoriaRepository;
 import com.upt.lp.perdidosapi.repository.MarcaRepository;
 import com.upt.lp.perdidosapi.repository.RegistoRepository;
@@ -26,16 +27,19 @@ import com.upt.lp.perdidosapi.repository.UtilizadorRepository;
 public class RegistoService {
 	
 	private final RegistoRepository repository;
+	private final AdministradorRepository administradorRepository;
 	private final UtilizadorRepository utilizadorRepository;
     private final CategoriaRepository categoriaRepository;
     private final SubcategoriaRepository subcategoriaRepository;
     private final MarcaRepository marcaRepository;
 	
-    public RegistoService(RegistoRepository repository, UtilizadorRepository utilizadorRepository,
+    public RegistoService(RegistoRepository repository, AdministradorRepository administradorRepository,
+                        UtilizadorRepository utilizadorRepository,
             				CategoriaRepository categoriaRepository, SubcategoriaRepository subcategoriaRepository,
             				MarcaRepository marcaRepository) {
     		
     	this.repository = repository;
+        this.administradorRepository = administradorRepository;
     	this.utilizadorRepository = utilizadorRepository;
     	this.categoriaRepository = categoriaRepository;
     	this.subcategoriaRepository = subcategoriaRepository;
@@ -80,7 +84,10 @@ public class RegistoService {
     }
     
     @Transactional
-    public void eliminarRegisto(long id) {
+    public void eliminarRegisto(long id, long codigoFuncionario) {
+        if (!administradorRepository.existsById(codigoFuncionario)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Código de funcionário inválido.");
+        }
     	
     	Registo registo = procurarRegisto(id);
     	repository.delete(registo);
