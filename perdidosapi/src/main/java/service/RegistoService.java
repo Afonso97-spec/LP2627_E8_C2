@@ -47,7 +47,7 @@ public class RegistoService {
 
     }
     
-    public RegistoDTO obterRegisto(int id) {
+    public RegistoDTO obterRegisto(long id) {
     	return RegistoMapper.toDTO(procurarRegisto(id));
 
     }
@@ -62,7 +62,112 @@ public class RegistoService {
     	
     	return RegistoMapper.toDTO(repository.save(registo));
     	
+    }
+    
+    @Transactional
+    public RegistoDTO atualizarDTO(long id, RegistoDTO dto) {
+        Registo registo = procurarRegisto(id);
+        validarRegisto(dto);
+
+        RegistoMapper.atualizarCampos(dto, registo);
+        associarEntidades(registo, dto);
+
+        Registo guardado = repository.save(registo);
+        return RegistoMapper.toDTO(guardado);
+        
+    }
+    
+    @Transactional
+    public void eliminarRegisto(long id) {
+    	
+    	Registo registo = procurarRegisto(id);
+    	repository.delete(registo);
     	
     }
+    
+    private Registo procurarRegisto(long id) {
+    	
+    	Registo registo = repository.findById(id).orElse(null);
+    	
+    	if(registo ==null ) {
+    		
+    		throw inexistente("Registo", id);
+    		
+    	}
+    	
+    	return registo;
+    	
+    }
+    
+    private void validarRegisto(RegistoDTO dto) {
+        if (dto.utilizadorId() == null || dto.categoriaId() == null || dto.titulo() == null || dto.titulo().isBlank()
+                || dto.descricao() == null || dto.descricao().isBlank() || dto.data() == null || dto.estado() == null) {
+        	
+            throw new ResponseStatusException( HttpStatus.BAD_REQUEST, 
+            									"Os campos utilizadorId, categoriaId, titulo, descricao, "
+            									+ "data e estado são obrigatórios.");
+        }
+    }
+    
+    private void associarEntidades(Registo registo, RegistoDTO dto) {
+    	
+        Utilizador utilizador = utilizadorRepository.findById(dto.utilizadorId()).orElse(null);
 
+        if (utilizador == null) {
+        	
+            throw inexistente("Utilizador", dto.utilizadorId());
+            
+        }
+
+        Categoria categoria = categoriaRepository.findById(dto.categoriaId()).orElse(null);
+
+        if (categoria == null) {
+        	
+            throw inexistente("Categoria", dto.categoriaId());
+            
+        }
+
+        SubCategoria subcategoria = null;
+
+        if (dto.subcategoriaId() != null) {
+        	
+        	subcategoria = subcategoriaRepository.findById(dto.subcategoriaId()).orElse(null);
+
+            if (subcategoria == null) {
+            	
+                throw inexistente("Subcategoria", dto.subcategoriaId());
+                
+            }
+
+            if (subcategoria.getCategoria().getId() != categoria.getId()) {
+                throw new ResponseStatusException( HttpStatus.BAD_REQUEST,
+                        "A subcategoria indicada não pertence à categoria escolhida.");
+            }
+        }
+
+        Marca marca = null;
+
+        if (dto.marcaId() != null) {
+        	
+            marca = marcaRepository.findById(dto.marcaId()).orElse(null);
+
+            if (marca == null) {
+            	
+                throw inexistente("Marca", dto.marcaId());
+            }
+        }
+
+        registo.setUtilizador(utilizador);
+        registo.setCategoria(categoria);
+        registo.setSubcategoria(subcategoria);
+        registo.setMarca(marca);
+        
+    }
+    
+    private ResponseStatusException inexistente(String entidade, long id) {
+        
+    	return new ResponseStatusException(HttpStatus.NOT_FOUND,entidade + " inexistente: " + id);
+    	
+    }
+    
 }

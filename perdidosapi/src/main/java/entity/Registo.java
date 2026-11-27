@@ -24,7 +24,7 @@ public class Registo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	
-	private int id;
+	private long id;
 	
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "utilizador_id", nullable = false)
@@ -88,7 +88,7 @@ public class Registo {
 			
 }
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
