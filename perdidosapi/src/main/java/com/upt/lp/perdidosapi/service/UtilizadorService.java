@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import entity.Utilizador;
-import entityDTOs.UtilizadorDTO;
-import repository.UtilizadorRepository;
+import com.upt.lp.perdidosapi.entity.Utilizador;
+import com.upt.lp.perdidosapi.entityDTOs.UtilizadorDTO;
+import com.upt.lp.perdidosapi.repository.UtilizadorRepository;
 
 @Service
 public class UtilizadorService {
