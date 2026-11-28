@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.upt.lp.perdidosapi.entity.Utilizador;
+import com.upt.lp.perdidosapi.entityDTOs.CriarUtilizadoresDTO;
 import com.upt.lp.perdidosapi.entityDTOs.UtilizadorDTO;
+import com.upt.lp.perdidosapi.mapper.UtilizadorMapper;
 import com.upt.lp.perdidosapi.repository.UtilizadorRepository;
 
 @Service
@@ -17,16 +19,16 @@ public class UtilizadorService {
         this.utilizadorRepository = utilizadorRepository;
     }
 
-    public UtilizadorDTO registarUtilizador(String nome, String email, String password) {
-        if (nome == null || nome.isBlank()
-                || email == null || email.isBlank()
-                || password == null || password.isBlank()) {
+    public UtilizadorDTO registarUtilizador(CriarUtilizadoresDTO dto) { //Este método valida os dados recebidos, verifica duplicados e guarda o novo utilizador
+        if (dto.nome() == null || dto.nome().isBlank()
+                || dto.email() == null || dto.email().isBlank()
+                || dto.password() == null || dto.password().isBlank()) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Nome, email e palavra-passe são obrigatórios.");
         }
 
-        String emailLimpo = email.trim();
+        String emailLimpo = dto.email().trim();
 
         if (!emailLimpo.contains("@")) {
             throw new ResponseStatusException(
@@ -40,12 +42,21 @@ public class UtilizadorService {
                     "Já existe uma conta com esse email.");
         }
 
-        Utilizador novoUtilizador = new Utilizador(nome.trim(), emailLimpo, password);
-        Utilizador utilizadorGuardado = utilizadorRepository.save(novoUtilizador);
+        Utilizador novoUtilizador = UtilizadorMapper.toEntity(dto);
+        Utilizador guardado = utilizadorRepository.save(novoUtilizador);
 
-        return new UtilizadorDTO(
-                utilizadorGuardado.getCodigo(),
-                utilizadorGuardado.getNome(),
-                utilizadorGuardado.getEmail());
+        return UtilizadorMapper.toDTO(guardado);
+    }
+
+    public UtilizadorDTO obterUtilizador(long codigo) { //Este método procura um utilizador específico pelo seu ID 
+        Utilizador utilizador = utilizadorRepository.findById(codigo).orElse(null);
+
+        if (utilizador == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Utilizador inexistente: " + codigo);
+        }
+
+        return UtilizadorMapper.toDTO(utilizador);
     }
 }
